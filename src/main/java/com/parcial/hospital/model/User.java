@@ -10,6 +10,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -65,4 +67,18 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private Paciente paciente;
+
+    @PrePersist
+    void prePersist() {
+        fechaCreacion = LocalDateTime.now();
+        fechaActualizacion = fechaCreacion;
+        if (activo == null) {
+            activo = true;
+        }
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        fechaActualizacion = LocalDateTime.now();
+    }
 }

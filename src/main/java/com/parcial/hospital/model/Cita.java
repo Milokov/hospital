@@ -10,8 +10,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,14 +23,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
-@Table(
-        name = "citas",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uk_citas_medico_fecha_hora", columnNames = {"medico_id", "fecha", "hora_inicio"}),
-                @UniqueConstraint(name = "uk_citas_paciente_fecha_hora", columnNames = {"paciente_id", "fecha", "hora_inicio"}),
-                @UniqueConstraint(name = "uk_citas_consultorio_fecha_hora", columnNames = {"consultorio_id", "fecha", "hora_inicio"})
-        }
-)
+@Table(name = "citas")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -76,4 +70,18 @@ public class Cita {
 
     @Column(nullable = false)
     private LocalDateTime fechaActualizacion = LocalDateTime.now();
+
+    @PrePersist
+    void prePersist() {
+        fechaCreacion = LocalDateTime.now();
+        fechaActualizacion = fechaCreacion;
+        if (estado == null) {
+            estado = EstadoCita.PROGRAMADA;
+        }
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        fechaActualizacion = LocalDateTime.now();
+    }
 }

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medico | Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="topbar">
+    <div><strong>Hospital</strong><span>Medicos</span></div>
+    <a class="ghost link" th:href="@{/admin}">Volver</a>
+</header>
+<main class="page narrow">
+    <h1 th:text="${medicoForm.id == null ? 'Crear medico' : 'Editar medico'}"></h1>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+    <form class="form grid-form"
+          th:action="${medicoForm.id == null ? '/admin/medicos' : '/admin/medicos/' + medicoForm.id}"
+          th:object="${medicoForm}" method="post">
+        <label>Usuario<input th:field="*{username}" th:readonly="*{id != null}" required></label>
+        <label>Contrasena<input type="password" th:field="*{password}" th:required="*{id == null}"></label>
+        <label>Email<input type="email" th:field="*{email}" required></label>
+        <label>Nombres<input th:field="*{nombres}" required></label>
+        <label>Apellidos<input th:field="*{apellidos}" required></label>
+        <label>Telefono<input th:field="*{telefono}"></label>
+        <label>Licencia<input th:field="*{numeroLicencia}" th:readonly="*{id != null}" required></label>
+        <label>Especialidad<input th:field="*{especialidad}" required></label>
+        <label>Inicio<input type="time" th:field="*{horarioInicio}" required></label>
+        <label>Fin<input type="time" th:field="*{horarioFin}" required></label>
+        <label class="full">Consultorio
+            <select th:field="*{consultorioId}">
+                <option value="">Sin asignar</option>
+                <option th:each="consultorio : ${consultorios}" th:value="${consultorio.id}" th:text="${consultorio.codigo + ' - ' + consultorio.nombre}"></option>
+            </select>
+        </label>
+        <button class="full" type="submit">Guardar</button>
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar cita | Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="topbar">
+    <div><strong>Hospital</strong><span>Editar cita</span></div>
+    <a class="ghost link" th:href="@{/paciente}">Volver</a>
+</header>
+<main class="page narrow">
+    <h1>Editar cita</h1>
+    <form class="form" th:action="@{/paciente/citas/{id}(id=${citaForm.id})}" th:object="${citaForm}" method="post">
+        <label>Estado
+            <select th:field="*{estado}">
+                <option th:each="estado : ${estados}" th:value="${estado}" th:text="${estado}"></option>
+            </select>
+        </label>
+        <label>Motivo<textarea th:field="*{motivo}" rows="3" required></textarea></label>
+        <label>Observaciones<textarea th:field="*{observaciones}" rows="3"></textarea></label>
+        <button type="submit">Guardar cambios</button>
+    </form>
+</main>
+</body>
+</html>

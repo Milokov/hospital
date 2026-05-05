@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medico | Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="topbar">
+    <div><strong>Hospital</strong><span>Panel medico</span></div>
+    <form th:action="@{/logout}" method="post"><button class="ghost" type="submit">Salir</button></form>
+</header>
+<main class="page">
+    <div class="page-heading">
+        <div>
+            <h1 th:text="${medico.user.nombres + ' ' + medico.user.apellidos}"></h1>
+            <p class="muted" th:text="${medico.especialidad}"></p>
+        </div>
+    </div>
+    <div class="alert success" th:if="${success}" th:text="${success}"></div>
+    <section class="panel">
+        <h2>Consultas asignadas</h2>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Fecha</th><th>Paciente</th><th>Motivo</th><th>Estado</th><th>Actualizar</th></tr></thead>
+                <tbody>
+                <tr th:each="cita : ${citas}">
+                    <td th:text="${cita.fecha + ' ' + cita.horaInicio}"></td>
+                    <td th:text="${cita.paciente.user.nombres + ' ' + cita.paciente.user.apellidos}"></td>
+                    <td th:text="${cita.motivo}"></td>
+                    <td><span class="badge" th:text="${cita.estado}"></span></td>
+                    <td>
+                        <form class="inline-form" th:action="@{/medico/citas/{id}/estado(id=${cita.id})}" method="post">
+                            <select name="estado">
+                                <option th:each="estado : ${estados}" th:value="${estado}" th:text="${estado}" th:selected="${estado == cita.estado}"></option>
+                            </select>
+                            <input name="observaciones" placeholder="Observaciones" th:value="${cita.observaciones}">
+                            <button type="submit">Guardar</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(citas)}"><td colspan="5">No tienes citas asignadas.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

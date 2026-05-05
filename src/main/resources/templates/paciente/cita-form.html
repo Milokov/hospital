@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva cita | Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="topbar">
+    <div><strong>Hospital</strong><span>Nueva cita</span></div>
+    <a class="ghost link" th:href="@{/paciente}">Volver</a>
+</header>
+<main class="page narrow">
+    <h1>Crear cita</h1>
+    <div class="alert error" th:if="${error}" th:text="${error}"></div>
+    <form class="form grid-form" th:action="@{/paciente/citas}" th:object="${citaForm}" method="post">
+        <label>Medico
+            <select th:field="*{medicoId}" required>
+                <option value="">Seleccionar</option>
+                <option th:each="medico : ${medicos}" th:value="${medico.id}" th:text="${medico.user.nombres + ' ' + medico.user.apellidos + ' - ' + medico.especialidad}"></option>
+            </select>
+        </label>
+        <label>Consultorio
+            <select th:field="*{consultorioId}">
+                <option value="">Usar consultorio del medico</option>
+                <option th:each="consultorio : ${consultorios}" th:value="${consultorio.id}" th:text="${consultorio.codigo + ' - ' + consultorio.nombre}"></option>
+            </select>
+        </label>
+        <label>Fecha<input type="date" th:field="*{fecha}" required></label>
+        <label>Hora inicio<input type="time" th:field="*{horaInicio}" required></label>
+        <label>Hora fin<input type="time" th:field="*{horaFin}" required></label>
+        <label class="full">Motivo<textarea th:field="*{motivo}" rows="3" required></textarea></label>
+        <label class="full">Observaciones<textarea th:field="*{observaciones}" rows="3"></textarea></label>
+        <button class="full" type="submit">Guardar cita</button>
+    </form>
+</main>
+</body>
+</html>

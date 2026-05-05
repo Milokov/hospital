@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paciente | Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="topbar">
+    <div><strong>Hospital</strong><span>Panel paciente</span></div>
+    <form th:action="@{/logout}" method="post"><button class="ghost" type="submit">Salir</button></form>
+</header>
+<main class="page">
+    <div class="page-heading">
+        <div>
+            <h1 th:text="${paciente.user.nombres + ' ' + paciente.user.apellidos}"></h1>
+            <p class="muted">Historial y solicitudes de citas.</p>
+        </div>
+        <a class="button-link" th:href="@{/paciente/citas/nueva}">Crear cita</a>
+    </div>
+    <div class="alert success" th:if="${success}" th:text="${success}"></div>
+    <section class="panel">
+        <h2>Mis citas</h2>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Fecha</th><th>Medico</th><th>Consultorio</th><th>Estado</th><th></th></tr></thead>
+                <tbody>
+                <tr th:each="cita : ${citas}">
+                    <td th:text="${cita.fecha + ' ' + cita.horaInicio}"></td>
+                    <td th:text="${cita.medico.user.nombres + ' ' + cita.medico.user.apellidos}"></td>
+                    <td th:text="${cita.consultorio.codigo}"></td>
+                    <td><span class="badge" th:text="${cita.estado}"></span></td>
+                    <td><a th:href="@{/paciente/citas/{id}/editar(id=${cita.id})}">Editar</a></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(citas)}"><td colspan="5">No tienes citas registradas.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

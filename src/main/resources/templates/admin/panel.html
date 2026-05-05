@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Hospital</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <strong>Hospital</strong>
+        <span>Panel administrador</span>
+    </div>
+    <form th:action="@{/logout}" method="post"><button class="ghost" type="submit">Salir</button></form>
+</header>
+
+<main class="page">
+    <div class="page-heading">
+        <div>
+            <h1>Administracion</h1>
+            <p class="muted">Medicos, consultorios y programacion de citas.</p>
+        </div>
+        <div class="actions">
+            <a class="button-link" th:href="@{/admin/medicos/nuevo}">Crear medico</a>
+            <a class="button-link secondary" th:href="@{/admin/citas/nueva}">Crear cita</a>
+        </div>
+    </div>
+
+    <div class="alert success" th:if="${success}" th:text="${success}"></div>
+
+    <section class="panel">
+        <h2>Medicos activos</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Especialidad</th>
+                    <th>Licencia</th>
+                    <th>Consultorio</th>
+                    <th>Horario</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="medico : ${medicos}">
+                    <td th:text="${medico.user.nombres + ' ' + medico.user.apellidos}"></td>
+                    <td th:text="${medico.especialidad}"></td>
+                    <td th:text="${medico.numeroLicencia}"></td>
+                    <td th:text="${medico.consultorio != null ? medico.consultorio.codigo : 'Sin asignar'}"></td>
+                    <td th:text="${medico.horarioInicio + ' - ' + medico.horarioFin}"></td>
+                    <td class="row-actions">
+                        <a th:href="@{/admin/medicos/{id}/editar(id=${medico.id})}">Editar</a>
+                        <form th:action="@{/admin/medicos/{id}/desactivar(id=${medico.id})}" method="post">
+                            <button class="link-danger" type="submit">Desactivar</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(medicos)}">
+                    <td colspan="6">No hay medicos registrados.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Consultorios</h2>
+        <div class="cards-grid">
+            <article class="item-card" th:each="consultorio : ${consultorios}">
+                <strong th:text="${consultorio.codigo}"></strong>
+                <span th:text="${consultorio.nombre}"></span>
+                <small th:text="${'Piso ' + consultorio.piso}"></small>
+            </article>
+        </div>
+    </section>
+</main>
+</body>
+</html>
